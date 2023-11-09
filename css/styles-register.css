@@ -1,0 +1,17 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin: 0;
+    background-image: url('https://media.giphy.com/media/l41JK95QVW9C365Tq/giphy.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.custom-container {
+    width: 80%;
+    margin-top: 70px;
+    max-width: 400px;
+}

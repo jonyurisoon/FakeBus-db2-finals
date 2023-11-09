@@ -1,0 +1,51 @@
+USE BUS_DB2;
+
+CREATE TABLE Registration (
+
+    UserType VARCHAR(30) NOT NULL,
+    FName VARCHAR(30) NOT NULL,
+    LName VARCHAR(30) NOT NULL,
+    Email VARCHAR(30) NOT NULL,
+    PhoneNum INT(15) NOT NULL
+
+);
+
+
+CREATE TABLE Customer (
+    CustomerID INT(15) NOT NULL AUTO_INCREMENT,
+    CustomerFName VARCHAR(30) NOT NULL,
+    CustomerLName VARCHAR(30) NOT NULL,
+    CustomerEmail VARCHAR(30) NOT NULL,
+    CustomerPhoneNum INT(15) NOT NULL,
+    CustomerPassword VARCHAR(255) NOT NULL,
+    CONSTRAINT PK_USER_ID PRIMARY KEY (CustomerID)
+);
+
+
+CREATE TABLE BusOperator (
+    OperatorID INT(15) NOT NULL AUTO_INCREMENT,
+    OperatorFName VARCHAR(30) NOT NULL,
+    OperatorLName VARCHAR(30) NOT NULL,
+    OperatorEmail VARCHAR(30) NOT NULL,
+    OperatorPhoneNum INT(15) NOT NULL,
+    OperatorPassword VARCHAR(255) NOT NULL, 
+    CONSTRAINT PK_OPERATOR_ID PRIMARY KEY (OperatorID)
+);
+
+
+CREATE TABLE Route (
+    RouteID INT(15) NOT NULL AUTO_INCREMENT,
+    RouteName VARCHAR(30) NOT NULL,
+    CONSTRAINT PK_ROUTE_ID PRIMARY KEY (RouteID)
+);
+
+CREATE TABLE Bus (
+    OperatorID INT(15) NOT NULL,
+    RouteID INT(15) NOT NULL,
+    BusID INT(15) NOT NULL AUTO_INCREMENT,
+    BusName VARCHAR(30) NOT NULL,
+    NumberPlate VARCHAR(30) NOT NULL,
+    CONSTRAINT PK_BUS_ID PRIMARY KEY (BusID),
+    CONSTRAINT FK_OperatorID_BusOperator FOREIGN KEY (OperatorID) REFERENCES BusOperator (OperatorID),
+    CONSTRAINT FK_RouteID_Route FOREIGN KEY (RouteID) REFERENCES Route (RouteID)
+);
