@@ -70,7 +70,9 @@
                             icon: "success",
                             title: "Success!",
                             text: "Registration successful!",
-                        });';
+                        }).then(() => {
+                            window.location.href = "login.php";
+                        })';
                     echo '</script>';
                 } else {
                     // Display error if registration fails.

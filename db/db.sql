@@ -7,7 +7,6 @@ CREATE TABLE Registration (
     LName VARCHAR(30) NOT NULL,
     Email VARCHAR(30) NOT NULL,
     PhoneNum INT(15) NOT NULL
-
 );
 
 
@@ -40,12 +39,12 @@ CREATE TABLE Route (
 );
 
 CREATE TABLE Bus (
-    OperatorID INT(15) NOT NULL,
-    RouteID INT(15) NOT NULL,
+    /*OperatorID INT(15) NOT NULL,
+    RouteID INT(15) NOT NULL,*/
     BusID INT(15) NOT NULL AUTO_INCREMENT,
     BusName VARCHAR(30) NOT NULL,
     NumberPlate VARCHAR(30) NOT NULL,
-    CONSTRAINT PK_BUS_ID PRIMARY KEY (BusID),
-    CONSTRAINT FK_OperatorID_BusOperator FOREIGN KEY (OperatorID) REFERENCES BusOperator (OperatorID),
-    CONSTRAINT FK_RouteID_Route FOREIGN KEY (RouteID) REFERENCES Route (RouteID)
+    CONSTRAINT PK_BUS_ID PRIMARY KEY (BusID)
+    /*CONSTRAINT FK_OperatorID_BusOperator FOREIGN KEY (OperatorID) REFERENCES BusOperator (OperatorID),
+    CONSTRAINT FK_RouteID_Route FOREIGN KEY (RouteID) REFERENCES Route (RouteID)*/
 );
