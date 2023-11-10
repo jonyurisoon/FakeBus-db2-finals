@@ -13,7 +13,6 @@
     <style>
         body {
             padding-top: 56px;
-            /* Height of fixed navbar */
         }
 
         .logout-btn {
@@ -46,7 +45,6 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">Customer Dashboard</a>
-        <!-- Add your navigation links or buttons here -->
     </nav>
 
     <div class="container-fluid">
@@ -75,9 +73,6 @@
             </nav>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 main-content">
-                <!-- Your dashboard content goes here -->
-
-                <!-- Example content -->
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">

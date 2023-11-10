@@ -1,3 +1,7 @@
+<?php
+include 'operator-crud.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,6 +11,7 @@
     <title>Operator Dashboard</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -46,7 +51,6 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">Operator Dashboard</a>
-        <!-- Add your navigation links or buttons here -->
     </nav>
 
     <div class="container-fluid">
@@ -55,17 +59,17 @@
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active btn btn-info btn-h" href="#">
+                            <a class="nav-link active btn btn-info btn-h">
                                 Home
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-info btn-h" href="#">
+                            <a class="nav-link btn btn-info btn-h" href="profile.php">
                                 Profile
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-info btn-h" href="#">
+                            <a class="nav-link btn btn-info btn-h" href="settings.php">
                                 Settings
                             </a>
                         </li>
@@ -75,39 +79,146 @@
             </nav>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 main-content">
-                <!-- Your dashboard content goes here -->
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addBusModal" style="width:auto; margin-top:5px">
+                    &#43; Add Bus
+                </button>
 
-                <!-- Example content -->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of
-                                        the
-                                        card's content.</p>
-                                </div>
+                <!-- Add Bus Modal -->
+                <div class="modal fade" id="addBusModal" tabindex="-1" role="dialog" aria-labelledby="addBusModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addBusModalLabel">Add Bus</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of
-                                        the
-                                        card's content.</p>
-                                </div>
+                            <div class="modal-body">
+                                <form method="post" enctype="multipart/form-data">
+                                    <form method="post" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <label>Bus name:</label>
+                                            <textarea class="form-control" name="busName" rows="3" required></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Bus Number Plate:</label>
+                                            <input class="form-control" type="text" name="busPlateNumber" required />
+                                        </div>
+                                        <button class="btn btn-primary" type="submit" name="submit" style="margin-left: 190px; margin-top: 15px;">Save</button>
+                                    </form>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
+                <br>
+                <div>
+                    <table class="table table-bordered table-hover mx-auto p-2" style="width: 100%; margin-top: 10px;">
+                        <tr>
+                            <td style="text-align: center;"><b>ID</b></td>
+                            <td style="text-align: center;"><b>BUS NAME</b></td>
+                            <td style="text-align: center;"><b>BUS PLATE NUMBER</b></td>
+                            <td style="text-align: center;"><b>ACTION</b></td>
+                        </tr>
+                        <?php
+                        $rows = view_data();
+                        foreach ($rows as $row) {
+                            echo "<tr>";
+                            echo "<td>" . $row['BusID'] . "</td>";
+                            echo "<td>" . $row['BusName'] . "</td>";
+                            echo "<td>" . $row['NumberPlate'] . "</td>";
+                        ?>
+                            <td class="d-flex justify-content-center">
+                                <form method="post" enctype="multipart/form-data" action="?edit_id=<?php echo $row['BusID']; ?>" style="display: inline;">
+                                    <input type="hidden" name="edit" value="<?php echo $row['BusID']; ?>">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editBusModal" data-bus-id="<?php echo $row['BusID']; ?>" data-bus-name="<?php echo $row['BusName']; ?>" data-number-plate="<?php echo $row['NumberPlate']; ?>">EDIT</button>&nbsp;
+                                </form>
+
+                                <form method="post" style="display: inline;">
+                                    <input type="hidden" name="delete" value="<?php echo $row['BusID']; ?>">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteBusModal" data-bus-id="<?php echo $row['BusID']; ?>">DELETE</button>
+                                </form>
+                            </td>
+                        <?php echo "</tr>";
+                        }
+                        ?>
+                        <!-- Edit Menu Modal -->
+                        <div class="modal fade" id="editBusModal" tabindex="-1" role="dialog" aria-labelledby="editBusModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editMenuModalLabel">Edit Bus Name</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            <input type="hidden" name="BusID" id="edit-bus-id">
+                                            <div class="form-group">
+                                                <label for="edit-busName">Bus Name</label>
+                                                <input type="text" class="form-control" id="edit-busName" name="BusName" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edit-numberPlate">Bus Plate Number</label>
+                                                <textarea class="form-control" id="edit-numberPlate" name="NumberPlate" rows="3" required></textarea>
+                                            </div>
+                                            <button class="btn btn-primary" type="submit" name="edit" style="margin-left: 190px; margin-top: 15px;">Save</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Edit Menu Modal -->
+
+                        <!-- Delete Menu Modal -->
+                        <div class="modal fade" id="deleteBusModal" tabindex="-1" role="dialog" aria-labelledby="deleteBusModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteBusModalLabel">Confirm Deletion</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this menu item?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <form method="post" style="display: inline;">
+                                            <input type="hidden" name="delete" id="delete-bus-id">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Delete Menu Modal -->
+
+                        <script>
+                            $('#editBusModal').on('show.bs.modal', function(event) {
+                                var button = $(event.relatedTarget);
+                                var BusID = button.data('bus-id');
+                                var BusName = button.data('bus-name');
+                                var NumberPlate = button.data('number-plate');
+
+                                $('#edit-bus-id').val(BusID);
+                                $('#edit-busName').val(BusName);
+                                $('#edit-numberPlate').val(NumberPlate);
+                            });
+
+                            $('#deleteBusModal').on('show.bs.modal', function(event) {
+                                var button = $(event.relatedTarget);
+                                var BusID = button.data('bus-id');
+
+                                $('#delete-bus-id').val(BusID);
+                            });
+                        </script>
+
+                </div>
         </div>
+        </main>
+    </div>
     </div>
 
     <script>
