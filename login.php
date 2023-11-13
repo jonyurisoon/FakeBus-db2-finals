@@ -13,7 +13,11 @@
 
 <body>
     <?php
-    include 'loginFunction.php'
+    include 'loginFunction.php';
+
+    $userTypeValue = isset($_POST['userType']) ? $_POST['userType'] : '';
+    $emailValue = isset($_POST['email']) ? $_POST['email'] : '';
+
     ?>
     <div class="container mt-5">
         <div class="login-container mx-auto p-4 border rounded shadow mb-5 bg-white">
@@ -22,14 +26,14 @@
                 <div class="form-group">
                     <label for="userType">User Type:</label>
                     <select class="form-control" id="userType" name="userType" autocomplete="off">
-                        <option value="Customer">Customer</option>
-                        <option value="Operator">Operator</option>
+                        <option value="Customer" <?php echo ($userTypeValue === 'Customer') ? 'selected' : ''; ?>>Customer</option>
+                        <option value="Operator" <?php echo ($userTypeValue === 'Operator') ? 'selected' : ''; ?>>Operator</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" required autocomplete="off">
+                    <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($emailValue); ?>" required autocomplete="off">
                 </div>
 
                 <div class="form-group">

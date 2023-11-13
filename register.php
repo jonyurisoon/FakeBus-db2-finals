@@ -17,7 +17,14 @@
 
 <body>
     <?php
-    include 'registerFunction.php'
+    include 'registerFunction.php';
+
+    $userTypeValue = isset($_POST['userType']) ? $_POST['userType'] : '';
+    $fNameValue = isset($_POST['fName']) ? $_POST['fName'] : '';
+    $lNameValue = isset($_POST['lName']) ? $_POST['lName'] : '';
+    $emailValue = isset($_POST['email']) ? $_POST['email'] : '';
+    $phoneNumValue = isset($_POST['phoneNum']) ? $_POST['phoneNum'] : '';
+
     ?>
     <div class="custom-container border rounded p-4 shadow mb-5 bg-white">
         <img src="img/logo.png" alt="Login Photo" class="img-fluid mx-auto d-block mb-4">
@@ -25,29 +32,29 @@
             <div class="form-group">
                 <label for="userType">User Type:</label>
                 <select class="form-control" name="userType" required>
-                    <option value="Customer">Customer</option>
-                    <option value="Operator">Operator</option>
+                    <option value="Customer" <?php echo ($userTypeValue === 'Customer') ? 'selected' : ''; ?>>Customer</option>
+                    <option value="Operator" <?php echo ($userTypeValue === 'Operator') ? 'selected' : ''; ?>>Operator</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="fName">First Name:</label>
-                <input type="text" class="form-control" name="fName" required>
+                <input type="text" class="form-control" name="fName" value="<?php echo htmlspecialchars($fNameValue); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="lName">Last Name:</label>
-                <input type="text" class="form-control" name="lName" required>
+                <input type="text" class="form-control" name="lName" value="<?php echo htmlspecialchars($lNameValue); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" class="form-control" name="email" required>
+                <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($emailValue); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="phoneNum">Phone Number:</label>
-                <input type="text" class="form-control" name="phoneNum" required>
+                <input type="text" class="form-control" name="phoneNum" value="<?php echo htmlspecialchars($phoneNumValue); ?>" required>
             </div>
 
             <div class="form-group">
@@ -64,6 +71,9 @@
             <button type="submit" class="btn btn-primary mx-auto d-block">Register</button>
         </form>
     </div>
+
+</body>
+
 
 </body>
 
