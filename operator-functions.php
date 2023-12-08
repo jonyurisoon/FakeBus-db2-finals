@@ -20,7 +20,7 @@ function conn_db()
 function add_data($BusName, $NumberPlate)
 {
     $db = conn_db();
-    $sql = "Insert into Bus(BusName, NumberPlate) values(?, ?)";
+    $sql = "INSERT INTO Bus(BusName, NumberPlate) values(?, ?)";
     $st = $db->prepare($sql);
 
     if ($st->execute(array($BusName, $NumberPlate))) {

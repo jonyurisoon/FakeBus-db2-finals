@@ -28,6 +28,7 @@
 
         // Check if passwords match
         if ($password !== $confirmPassword) {
+            // Display error if passwords do not match.
             echo '<script type="text/javascript">';
             echo 'Swal.fire({
                     icon: "error",
@@ -36,54 +37,67 @@
                 });';
             echo '</script>';
         } else {
-            $checkEmailQuery = "";
-            if ($userType == "Customer") {
-                $checkEmailQuery = "SELECT * FROM Customer WHERE CustomerEmail='$email'";
-            } elseif ($userType == "Operator") {
-                $checkEmailQuery = "SELECT * FROM BusOperator WHERE OperatorEmail='$email'";
-            }
-
-            $result = $conn->query($checkEmailQuery);
-
-            if ($result->num_rows > 0) {
-                // Email not available. Display SweetAlert.
+            // Check password complexity
+            if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])/', $password)) {
+                // Display error if password complexity requirements are not met.
                 echo '<script type="text/javascript">';
                 echo 'Swal.fire({
                         icon: "error",
                         title: "Oops!",
-                        text: "Email not available. Please choose another email.",
+                        text: "Password must contain at least one uppercase letter, one number, and one special character.",
                     });';
                 echo '</script>';
             } else {
+                $checkEmailQuery = "";
                 if ($userType == "Customer") {
-                    $insertQuery = "INSERT INTO Customer (CustomerFName, CustomerLName, CustomerEmail, CustomerPhoneNum, CustomerPassword)
-                                VALUES ('$fName', '$lName', '$email', '$phoneNum', '$hashedPassword')";
+                    $checkEmailQuery = "SELECT * FROM Customer WHERE CustomerEmail='$email'";
                 } elseif ($userType == "Operator") {
-                    $insertQuery = "INSERT INTO BusOperator (OperatorFName, OperatorLName, OperatorEmail, OperatorPhoneNum, OperatorPassword)
-                                VALUES ('$fName', '$lName', '$email', '$phoneNum', '$hashedPassword')";
+                    $checkEmailQuery = "SELECT * FROM BusOperator WHERE OperatorEmail='$email'";
                 }
 
-                if ($conn->query($insertQuery) === TRUE) {
-                    // Registration successful. Display SweetAlert.
+                $result = $conn->query($checkEmailQuery);
+
+                if ($result->num_rows > 0) {
+                    // Email not available. Display SweetAlert.
                     echo '<script type="text/javascript">';
                     echo 'Swal.fire({
+                        icon: "error",
+                        title: "Oops!",
+                        text: "Email is already registered!. Please choose another email.",
+                    });';
+                    echo '</script>';
+                } else {
+                    if ($userType == "Customer") {
+                        $insertQuery = "INSERT INTO Customer (CustomerFName, CustomerLName, CustomerEmail, CustomerPhoneNum, CustomerPassword)
+                                VALUES ('$fName', '$lName', '$email', '$phoneNum', '$hashedPassword')";
+                    } elseif ($userType == "Operator") {
+                        $insertQuery = "INSERT INTO BusOperator (OperatorFName, OperatorLName, OperatorEmail, OperatorPhoneNum, OperatorPassword)
+                                VALUES ('$fName', '$lName', '$email', '$phoneNum', '$hashedPassword')";
+                    }
+
+                    if ($conn->query($insertQuery) === TRUE) {
+                        // Registration successful. Display SweetAlert.
+                        echo '<script type="text/javascript">';
+                        echo 'Swal.fire({
                             icon: "success",
                             title: "Success!",
                             text: "Registration successful!",
                         }).then(() => {
                             window.location.href = "login.php";
                         })';
-                    echo '</script>';
-                } else {
-                    // Display error if registration fails.
-                    echo "Error: " . $conn->error;
+                        echo '</script>';
+                    } else {
+                        // Display error if registration fails.
+                        echo "Error: " . $conn->error;
+                    }
                 }
             }
-        }
 
-        // Close connection
-        $conn->close();
+            // Close connection
+            $conn->close();
+        }
     }
+
     ?>
 </body>
 

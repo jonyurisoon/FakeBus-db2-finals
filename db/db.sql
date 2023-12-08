@@ -1,13 +1,5 @@
+CREATE DATABASE BUS_DB2;
 USE BUS_DB2;
-
-CREATE TABLE Registration (
-
-    UserType VARCHAR(30) NOT NULL,
-    FName VARCHAR(30) NOT NULL,
-    LName VARCHAR(30) NOT NULL,
-    Email VARCHAR(30) NOT NULL,
-    PhoneNum INT(15) NOT NULL
-);
 
 
 CREATE TABLE Customer (
