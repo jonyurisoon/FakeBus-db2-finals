@@ -28,3 +28,19 @@ if (isset($_POST['addRoute'])) {
 
     add_route($BusID, $RouteName, $DepartureTime);
 }
+
+// Edit Route
+if (isset($_POST['editRoute'])) {
+    $RouteID = trim($_POST['editRoute']);  // Corrected variable name
+    $RouteName = trim($_POST['RouteName']);
+    $DepartureTime = trim($_POST['DepartureTime']);
+
+    update_route($RouteName, $DepartureTime, $RouteID);  // Corrected parameter order
+}
+
+// Delete Route
+if (isset($_POST['deleteRoute'])) {
+    $routeID = $_POST['deleteRoute'];
+
+    delete_route($routeID);
+}

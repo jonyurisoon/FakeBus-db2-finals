@@ -56,17 +56,17 @@ include 'operator-crud.php';
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active btn btn-info btn-h" href="#">
+                            <a class="nav-link active btn btn-info btn-h">
                                 Home
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-info btn-h" href="#">
+                            <a class="nav-link btn btn-info btn-h" href="customerProfile.php">
                                 Profile
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-info btn-h" href="#">
+                            <a class="nav-link btn btn-info btn-h" href="settings.php">
                                 Settings
                             </a>
                         </li>
@@ -77,9 +77,8 @@ include 'operator-crud.php';
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 main-content">
                 <div>
-                    <table class="table table-bordered table-hover mx-auto p-2" style="width: 100%; margin-top: 10px;">
+                    <table class="table table-bordered mx-auto p-2" style="width: 100%; margin-top: 10px;">
                         <tr>
-                            <td style="text-align: center;"><b>ID</b></td>
                             <td style="text-align: center;"><b>BUS NAME</b></td>
                             <td style="text-align: center;"><b>BUS PLATE NUMBER</b></td>
                             <td style="text-align: center;"><b>ROUTES</b></td>
@@ -89,7 +88,6 @@ include 'operator-crud.php';
                         $rows = view_data();
                         foreach ($rows as $row) {
                             echo "<tr>";
-                            echo "<td>" . $row['BusID'] . "</td>";
                             echo "<td>" . $row['BusName'] . "</td>";
                             echo "<td>" . $row['NumberPlate'] . "</td>";
 

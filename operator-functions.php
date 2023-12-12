@@ -159,3 +159,50 @@ function view_routes($BusID)
     $db = null;
     return $rows;
 }
+
+function update_route($RouteName, $DepartureTime, $RouteID)
+{
+    $db = conn_db();
+    $sql = "UPDATE Route SET RouteName=?, DepartureTime=? WHERE RouteID=?";
+    $st = $db->prepare($sql);
+
+    if ($st->execute([$RouteName, $DepartureTime, $RouteID])) {
+        // Success - Display SweetAlert
+        echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Route updated!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'operatorDashboard.php';
+                }
+            });
+        </script>";
+    }
+    $db = null;
+}
+
+// Function to delete a route
+function delete_route($RouteID)
+{
+    $db = conn_db();
+    $sql = "DELETE FROM Route WHERE RouteID=?";
+    $st = $db->prepare($sql);
+
+    if ($st->execute([$RouteID])) {
+        // Success - Display SweetAlert
+        echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Route deleted!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'operatorDashboard.php';
+                }
+            });
+        </script>";
+    }
+    $db = null;
+}
