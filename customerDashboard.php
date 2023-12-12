@@ -1,3 +1,6 @@
+<?php
+include 'operator-crud.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,34 +76,36 @@
             </nav>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 main-content">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of
-                                        the
-                                        card's content.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card Title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of
-                                        the
-                                        card's content.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div>
+                    <table class="table table-bordered table-hover mx-auto p-2" style="width: 100%; margin-top: 10px;">
+                        <tr>
+                            <td style="text-align: center;"><b>ID</b></td>
+                            <td style="text-align: center;"><b>BUS NAME</b></td>
+                            <td style="text-align: center;"><b>BUS PLATE NUMBER</b></td>
+                            <td style="text-align: center;"><b>ROUTES</b></td>
+                            <td style="text-align: center;"><b>ACTION</b></td>
+                        </tr>
+                        <?php
+                        $rows = view_data();
+                        foreach ($rows as $row) {
+                            echo "<tr>";
+                            echo "<td>" . $row['BusID'] . "</td>";
+                            echo "<td>" . $row['BusName'] . "</td>";
+                            echo "<td>" . $row['NumberPlate'] . "</td>";
+
+                            echo "<td>";
+                            echo "<table class='table'>";
+                            echo "<tr><th>Route Name</th><th>Departure Time</th></tr>";
+                            $routes = view_routes($row['BusID']);
+                            foreach ($routes as $route) {
+                                echo "<tr><td>{$route['RouteName']}</td><td>{$route['DepartureTime']}</td></tr>";
+                            }
+                            echo "</table>";
+                            echo "</td>";
+                        ?>
+                        <?php echo "</tr>";
+                        }
+                        ?>
             </main>
         </div>
     </div>

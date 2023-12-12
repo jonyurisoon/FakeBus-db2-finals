@@ -20,3 +20,11 @@ if (isset($_POST['delete'])) {
     $BusID = trim($_POST['delete']);
     delete_data($BusID);
 }
+
+if (isset($_POST['addRoute'])) {
+    $BusID = isset($_POST['BusID']) ? trim($_POST['BusID']) : '';
+    $RouteName = isset($_POST['RouteName']) ? trim($_POST['RouteName']) : '';
+    $DepartureTime = isset($_POST['DepartureTime']) ? trim($_POST['DepartureTime']) : '';
+
+    add_route($BusID, $RouteName, $DepartureTime);
+}

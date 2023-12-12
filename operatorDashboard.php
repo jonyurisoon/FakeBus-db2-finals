@@ -95,28 +95,28 @@ include 'operator-crud.php';
                             </div>
                             <div class="modal-body">
                                 <form method="post" enctype="multipart/form-data">
-                                    <form method="post" enctype="multipart/form-data">
-                                        <div class="form-group">
-                                            <label>Bus name:</label>
-                                            <textarea class="form-control" name="busName" rows="3" required></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Bus Number Plate:</label>
-                                            <input class="form-control" type="text" name="busPlateNumber" required />
-                                        </div>
-                                        <button class="btn btn-primary" type="submit" name="submit" style="margin-left: 190px; margin-top: 15px;">Save</button>
-                                    </form>
+                                    <div class="form-group">
+                                        <label>Bus name:</label>
+                                        <input class="form-control" name="busName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Bus Number Plate:</label>
+                                        <input class="form-control" type="text" name="busPlateNumber" required />
+                                    </div>
+                                    <button class="btn btn-primary" type="submit" name="submit" style="margin-left: 190px; margin-top: 15px;">Save</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <br>
+                <!-- End of Add Bus Modal -->
                 <div>
                     <table class="table table-bordered table-hover mx-auto p-2" style="width: 100%; margin-top: 10px;">
                         <tr>
                             <td style="text-align: center;"><b>ID</b></td>
                             <td style="text-align: center;"><b>BUS NAME</b></td>
                             <td style="text-align: center;"><b>BUS PLATE NUMBER</b></td>
+                            <td style="text-align: center;"><b>ROUTES</b></td>
                             <td style="text-align: center;"><b>ACTION</b></td>
                         </tr>
                         <?php
@@ -126,8 +126,20 @@ include 'operator-crud.php';
                             echo "<td>" . $row['BusID'] . "</td>";
                             echo "<td>" . $row['BusName'] . "</td>";
                             echo "<td>" . $row['NumberPlate'] . "</td>";
+
+                            echo "<td>";
+                            echo "<table class='table'>";
+                            echo "<tr><th>Route Name</th><th>Departure Time</th><th>Action</th></tr>";
+                            $routes = view_routes($row['BusID']);
+                            foreach ($routes as $route) {
+                                echo "<tr><td>{$route['RouteName']}</td><td>{$route['DepartureTime']}</td></tr>";
+                            }
+                            echo "</table>";
+                            echo "</td>";
                         ?>
                             <td class="d-flex justify-content-center">
+                                <!-- Add Route Button -->
+                                <button class="btn btn-success" data-toggle="modal" data-target="#addRouteModal" data-bus-id="<?php echo $row['BusID']; ?>">Add Route</button>&nbsp;
                                 <form method="post" enctype="multipart/form-data" action="?edit_id=<?php echo $row['BusID']; ?>" style="display: inline;">
                                     <input type="hidden" name="edit" value="<?php echo $row['BusID']; ?>">
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editBusModal" data-bus-id="<?php echo $row['BusID']; ?>" data-bus-name="<?php echo $row['BusName']; ?>" data-number-plate="<?php echo $row['NumberPlate']; ?>">EDIT</button>&nbsp;
@@ -160,7 +172,7 @@ include 'operator-crud.php';
                                             </div>
                                             <div class="form-group">
                                                 <label for="edit-numberPlate">Bus Plate Number</label>
-                                                <textarea class="form-control" id="edit-numberPlate" name="NumberPlate" rows="3" required></textarea>
+                                                <input class="form-control" id="edit-numberPlate" name="NumberPlate" rows="3" required />
                                             </div>
                                             <button class="btn btn-primary" type="submit" name="edit" style="margin-left: 190px; margin-top: 15px;">Save</button>
                                         </form>
@@ -195,29 +207,65 @@ include 'operator-crud.php';
                         </div>
                         <!-- End Delete Menu Modal -->
 
-                        <script>
-                            $('#editBusModal').on('show.bs.modal', function(event) {
-                                var button = $(event.relatedTarget);
-                                var BusID = button.data('bus-id');
-                                var BusName = button.data('bus-name');
-                                var NumberPlate = button.data('number-plate');
 
-                                $('#edit-bus-id').val(BusID);
-                                $('#edit-busName').val(BusName);
-                                $('#edit-numberPlate').val(NumberPlate);
-                            });
+                        <!-- Add Route Modal -->
+                        <div class="modal fade" id="addRouteModal" tabindex="-1" role="dialog" aria-labelledby="addRouteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addRouteModalLabel">Add Route</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            <input type="hidden" name="BusID" id="route-bus-id">
+                                            <div class="form-group">
+                                                <label>Route Name:</label>
+                                                <input class="form-control" type="text" name="RouteName" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Departure Time:</label>
+                                                <input class="form-control" type="text" name="DepartureTime" required />
+                                            </div>
+                                            <button class="btn btn-primary" type="submit" name="addRoute" style="margin-left: 190px; margin-top: 15px;">Add Route</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </main>
 
-                            $('#deleteBusModal').on('show.bs.modal', function(event) {
-                                var button = $(event.relatedTarget);
-                                var BusID = button.data('bus-id');
+            <script>
+                $('#editBusModal').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget);
+                    var BusID = button.data('bus-id');
+                    var BusName = button.data('bus-name');
+                    var NumberPlate = button.data('number-plate');
 
-                                $('#delete-bus-id').val(BusID);
-                            });
-                        </script>
+                    $('#edit-bus-id').val(BusID);
+                    $('#edit-busName').val(BusName);
+                    $('#edit-numberPlate').val(NumberPlate);
+                });
 
-                </div>
+                $('#deleteBusModal').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget);
+                    var BusID = button.data('bus-id');
+
+                    $('#delete-bus-id').val(BusID);
+                });
+
+                $('#addRouteModal').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget);
+                    var BusID = button.data('bus-id');
+                    $('#route-bus-id').val(BusID);
+                });
+            </script>
+
         </div>
-        </main>
+    </div>
+    </main>
     </div>
     </div>
 

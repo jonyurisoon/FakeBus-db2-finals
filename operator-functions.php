@@ -126,3 +126,36 @@ function search_data($BusID)
     $db = null;
     return $row ?: [];
 }
+
+function add_route($BusID, $RouteName, $DepartureTime)
+{
+    $db = conn_db();
+    $sql = "INSERT INTO Route (BusID, RouteName, DepartureTime) VALUES (?, ?, ?)";
+    $st = $db->prepare($sql);
+
+    if ($st->execute([$BusID, $RouteName, $DepartureTime])) {
+        echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Route added!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'operatorDashboard.php';
+                }
+            });
+        </script>";
+    }
+    $db = null;
+}
+
+function view_routes($BusID)
+{
+    $db = conn_db();
+    $sql = "SELECT * FROM Route WHERE BusID = ? ORDER BY RouteID ASC";
+    $st = $db->prepare($sql);
+    $st->execute([$BusID]);
+    $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+    $db = null;
+    return $rows;
+}
