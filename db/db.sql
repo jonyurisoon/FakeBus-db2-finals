@@ -29,7 +29,7 @@ CREATE TABLE Route (
     RouteID INT AUTO_INCREMENT PRIMARY KEY,
     BusID INT,
     RouteName VARCHAR(255) NOT NULL,
-    DepartureTime VARCHAR(255) NOT NULL,
+    DepartureTime DATETIME NOT NULL,
     FOREIGN KEY (BusID) REFERENCES Bus(BusID)
 );
 

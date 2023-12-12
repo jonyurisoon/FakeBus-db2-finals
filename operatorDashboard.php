@@ -138,7 +138,6 @@ include 'operator-crud.php';
                             echo "</td>";
                         ?>
                             <td class="d-flex justify-content-center">
-                                <!-- Add Route Button -->
                                 <button class="btn btn-success" data-toggle="modal" data-target="#addRouteModal" data-bus-id="<?php echo $row['BusID']; ?>">Add Route</button>&nbsp;
                                 <form method="post" enctype="multipart/form-data" action="?edit_id=<?php echo $row['BusID']; ?>" style="display: inline;">
                                     <input type="hidden" name="edit" value="<?php echo $row['BusID']; ?>">
@@ -227,7 +226,7 @@ include 'operator-crud.php';
                                             </div>
                                             <div class="form-group">
                                                 <label>Departure Time:</label>
-                                                <input class="form-control" type="text" name="DepartureTime" required />
+                                                <input class="form-control" type="datetime-local" name="DepartureTime" required />
                                             </div>
                                             <button class="btn btn-primary" type="submit" name="addRoute" style="margin-left: 190px; margin-top: 15px;">Add Route</button>
                                         </form>
