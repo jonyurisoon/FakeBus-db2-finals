@@ -7,7 +7,7 @@ include 'operator-crud.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operator Dashboard</title>
+    <title>Customer Dashboard</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -86,6 +86,7 @@ include 'operator-crud.php';
                         </tr>
                         <?php
                         $rows = view_data();
+
                         foreach ($rows as $row) {
                             echo "<tr>";
                             echo "<td>" . $row['BusName'] . "</td>";
@@ -95,13 +96,23 @@ include 'operator-crud.php';
                             echo "<table class='table'>";
                             echo "<tr><th>Route Name</th><th>Departure Time</th></tr>";
                             $routes = view_routes($row['BusID']);
+
                             foreach ($routes as $route) {
                                 echo "<tr><td>{$route['RouteName']}</td><td>{$route['DepartureTime']}</td></tr>";
                             }
+
                             echo "</table>";
                             echo "</td>";
-                        ?>
-                        <?php echo "</tr>";
+
+                            // Action Column with "Book Now" button
+                            echo "<td>";
+                            echo "<form method='post' action='book-now.php'>"; // Change 'book-now.php' to your booking page
+                            echo "<input type='hidden' name='BusID' value='{$row['BusID']}'>";
+                            echo "<button type='submit' class='btn btn-success'>Book Now</button>";
+                            echo "</form>";
+                            echo "</td>";
+
+                            echo "</tr>";
                         }
                         ?>
             </main>

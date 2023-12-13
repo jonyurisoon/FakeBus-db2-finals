@@ -33,6 +33,17 @@ CREATE TABLE Route (
     FOREIGN KEY (BusID) REFERENCES Bus(BusID)
 );
 
+CREATE TABLE Ticket (
+    TicketID INT AUTO_INCREMENT PRIMARY KEY,
+    RouteID INT,
+    CustomerID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    FOREIGN KEY (RouteID) REFERENCES Route(RouteID)
+);
 
-
-
+CREATE TABLE Seat (
+    SeatID INT AUTO_INCREMENT PRIMARY KEY,
+    RouteID INT,
+    NumSeatsAvailable INT NOT NULL,
+    FOREIGN KEY (RouteID) REFERENCES Route(RouteID)
+);

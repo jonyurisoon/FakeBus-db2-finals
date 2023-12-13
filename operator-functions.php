@@ -127,13 +127,22 @@ function search_data($BusID)
     return $row ?: [];
 }
 
-function add_route($BusID, $RouteName, $DepartureTime)
+function add_route($BusID, $RouteName, $DepartureTime, $NumSeatsAvailable)
 {
     $db = conn_db();
     $sql = "INSERT INTO Route (BusID, RouteName, DepartureTime) VALUES (?, ?, ?)";
     $st = $db->prepare($sql);
 
     if ($st->execute([$BusID, $RouteName, $DepartureTime])) {
+        // Get the last inserted route ID
+        $routeID = $db->lastInsertId();
+
+        // Insert NumSeatsAvailable into the seat table if it's not NULL
+        if ($NumSeatsAvailable !== NULL) {
+            add_seats($routeID, $NumSeatsAvailable);
+        }
+
+        // Display success message with SweetAlert
         echo "<script>
             Swal.fire({
                 icon: 'success',
@@ -152,7 +161,11 @@ function add_route($BusID, $RouteName, $DepartureTime)
 function view_routes($BusID)
 {
     $db = conn_db();
-    $sql = "SELECT * FROM Route WHERE BusID = ? ORDER BY RouteID ASC";
+    $sql = "SELECT r.RouteID, r.RouteName, r.DepartureTime, s.NumSeatsAvailable 
+            FROM Route r
+            LEFT JOIN Seat s ON r.RouteID = s.RouteID
+            WHERE r.BusID = ?
+            ORDER BY r.RouteID ASC";
     $st = $db->prepare($sql);
     $st->execute([$BusID]);
     $rows = $st->fetchAll(PDO::FETCH_ASSOC);
@@ -160,14 +173,20 @@ function view_routes($BusID)
     return $rows;
 }
 
-function update_route($RouteName, $DepartureTime, $RouteID)
+
+function update_route($RouteName, $DepartureTime, $NumSeatsAvailable, $RouteID)
 {
     $db = conn_db();
-    $sql = "UPDATE Route SET RouteName=?, DepartureTime=? WHERE RouteID=?";
-    $st = $db->prepare($sql);
 
-    if ($st->execute([$RouteName, $DepartureTime, $RouteID])) {
-        // Success - Display SweetAlert
+    // Update route details
+    $sqlUpdateRoute = "UPDATE Route SET RouteName=?, DepartureTime=? WHERE RouteID=?";
+    $stUpdateRoute = $db->prepare($sqlUpdateRoute);
+
+    if ($stUpdateRoute->execute([$RouteName, $DepartureTime, $RouteID])) {
+        // Success - Update NumSeatsAvailable in associated seats
+        update_seats($RouteID, $NumSeatsAvailable);
+
+        // Display success message with SweetAlert
         echo "<script>
             Swal.fire({
                 icon: 'success',
@@ -180,18 +199,24 @@ function update_route($RouteName, $DepartureTime, $RouteID)
             });
         </script>";
     }
+
     $db = null;
 }
 
-// Function to delete a route
+// Example of deleting related seats before deleting the route with SweetAlert
 function delete_route($RouteID)
 {
     $db = conn_db();
-    $sql = "DELETE FROM Route WHERE RouteID=?";
-    $st = $db->prepare($sql);
 
-    if ($st->execute([$RouteID])) {
-        // Success - Display SweetAlert
+    $sqlDeleteSeats = "DELETE FROM seat WHERE RouteID = ?";
+    $stDeleteSeats = $db->prepare($sqlDeleteSeats);
+    $stDeleteSeats->execute([$RouteID]);
+
+    $sqlDeleteRoute = "DELETE FROM route WHERE RouteID = ?";
+    $stDeleteRoute = $db->prepare($sqlDeleteRoute);
+
+    if ($stDeleteRoute->execute([$RouteID])) {
+        // Success message with SweetAlert
         echo "<script>
             Swal.fire({
                 icon: 'success',
@@ -204,5 +229,30 @@ function delete_route($RouteID)
             });
         </script>";
     }
+
+    $db = null;
+}
+
+function add_seats($routeID, $numSeatsAvailable)
+{
+    $db = conn_db();
+    $sql = "INSERT INTO seat (RouteID, NumSeatsAvailable) VALUES (?, ?)";
+    $st = $db->prepare($sql);
+
+    $st->execute([$routeID, $numSeatsAvailable]);
+
+    $db = null;
+}
+
+function update_seats($RouteID, $NumSeatsAvailable)
+{
+    $db = conn_db();
+
+    // Update NumSeatsAvailable in seats table
+    $sqlUpdateSeats = "UPDATE seat SET NumSeatsAvailable=? WHERE RouteID=?";
+    $stUpdateSeats = $db->prepare($sqlUpdateSeats);
+
+    $stUpdateSeats->execute([$NumSeatsAvailable, $RouteID]);
+
     $db = null;
 }

@@ -123,30 +123,38 @@ include 'operator-crud.php';
                         $rows = view_data();
                         foreach ($rows as $row) {
                             echo "<tr>";
-                            echo "<td>" . $row['BusID'] . "</td>";
-                            echo "<td>" . $row['BusName'] . "</td>";
-                            echo "<td>" . $row['NumberPlate'] . "</td>";
-                            echo "<td>";
+                            echo "<td class='text-center'>" . $row['BusID'] . "</td>";
+                            echo "<td class='text-center'>" . $row['BusName'] . "</td>";
+                            echo "<td class='text-center'>" . $row['NumberPlate'] . "</td>";
+                            echo "<td class='text-center'>";
                             echo "<table class='table'>";
-                            echo "<tr><th>Route Name</th><th>Departure Time</th><th>Action</th></tr>";
+                            echo "<tr><th>Route Name</th><th>Departure Time</th><th>Number of Seats</th><th>Action</th></tr>";
                             $routes = view_routes($row['BusID']);
                             foreach ($routes as $route) {
                                 echo "<tr>";
-                                echo "<td>{$route['RouteName']}</td>";
-                                echo "<td>{$route['DepartureTime']}</td>";
-                                echo "<td>";
-                        ?>
-                                <button class='btn btn-primary' data-toggle='modal' data-target='#editRouteModal' data-route-id='{$route[' RouteID']}' data-route-name='{$route[' RouteName']}' data-departure-time='{$route[' DepartureTime']}'>Edit</button>
-                                <button class='btn btn-danger' data-toggle='modal' data-target='#deleteRouteModal' data-route-id='{$route[' RouteID']}'>Delete</button>
+                                echo "<td class='text-center'>{$route['RouteName']}</td>";
+                                echo "<td class='text-center'>{$route['DepartureTime']}</td>";
+                                echo "<td class='text-center'>{$route['NumSeatsAvailable']}</td>";
+                                echo "<td class='text-center'>";
 
-                            <?php
+                                echo "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#editRouteModal' 
+                                data-route-id='{$route['RouteID']}' 
+                                data-route-name='{$route['RouteName']}' 
+                                data-departure-time='{$route['DepartureTime']}' 
+                                data-num-seats-available='{$route['NumSeatsAvailable']}'>Edit</button>&nbsp;";
+
+                                echo "<button type='button' class='btn btn-danger' data-toggle='modal' data-target='#deleteRouteModal' 
+                                data-route-id='{$route['RouteID']}'>Delete</button>";
                                 echo "</td>";
                                 echo "</tr>";
+
+                        ?>
+                            <?php
                             }
                             echo "</table>";
                             echo "</td>";
                             ?>
-                            <td class="justify-content-center">
+                            <td class="justify-content-center text-center">
                                 <button class="btn btn-success" data-toggle="modal" data-target="#addRouteModal" data-bus-id="<?php echo $row['BusID']; ?>">Add Route</button>&nbsp;
                                 <form method="post" enctype="multipart/form-data" action="?edit_id=<?php echo $row['BusID']; ?>" style="display: inline;">
                                     <input type="hidden" name="edit" value="<?php echo $row['BusID']; ?>">
@@ -180,7 +188,8 @@ include 'operator-crud.php';
                                             </div>
                                             <div class="form-group">
                                                 <label for="edit-numberPlate">Bus Plate Number</label>
-                                                <input class="form-control" id="edit-numberPlate" name="NumberPlate" rows="3" required />
+                                                <input type="text" class="form-control" id="edit-numberPlate" name="NumberPlate" required />
+
                                             </div>
                                             <button class="btn btn-primary" type="submit" name="edit" style="margin-left: 190px; margin-top: 15px;">Save</button>
                                         </form>
@@ -237,6 +246,10 @@ include 'operator-crud.php';
                                                 <label>Departure Time:</label>
                                                 <input class="form-control" type="datetime-local" name="DepartureTime" required />
                                             </div>
+                                            <div class="form-group">
+                                                <label>Number of seats: </label>
+                                                <input class="form-control" type="number" name="NumSeatsAvailable" required />
+                                            </div>
                                             <button class="btn btn-primary" type="submit" name="addRoute" style="margin-left: 190px; margin-top: 15px;">Add Route</button>
                                         </form>
                                     </div>
@@ -264,6 +277,10 @@ include 'operator-crud.php';
                                             <div class="form-group">
                                                 <label for="DepartureTime">Departure Time:</label>
                                                 <input class="form-control" type="datetime-local" name="DepartureTime" value="<?php echo date('Y-m-d\TH:i:s', strtotime($route['DepartureTime'])); ?>" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="NumSeatsAvailable">Number of seats:</label>
+                                                <input class="form-control" type="number" name="NumSeatsAvailable" value="<?php echo $route['NumSeatsAvailable']; ?>" required />
                                             </div>
                                             <button class="btn btn-primary" type="submit" style="margin-left: 190px; margin-top: 15px;">Save</button>
                                         </form>
@@ -327,12 +344,20 @@ include 'operator-crud.php';
                     var RouteId = button.data('route-id');
                     var RouteName = button.data('route-name');
                     var DepartureTime = button.data('departure-time');
+                    var NumSeatsAvailable = button.data('num-seats-available');
+
+                    //console.log('RouteId:', RouteId);
+                    //console.log('RouteName:', RouteName);
+                    //console.log('DepartureTime:', DepartureTime);
+                    //console.log('NumSeatsAvailable:', NumSeatsAvailable);
 
                     // Populate the modal fields with the route data
                     $('#edit-route-id').val(RouteId);
                     $('#edit-routeName').val(RouteName);
                     $('#edit-departureTime').val(DepartureTime);
+                    $('#edit-numSeatsAvailable').val(NumSeatsAvailable);
                 });
+
 
 
                 // Delete Route Modal
