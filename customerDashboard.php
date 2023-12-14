@@ -82,40 +82,40 @@ include 'operator-crud.php';
                             <td style="text-align: center;"><b>BUS NAME</b></td>
                             <td style="text-align: center;"><b>BUS PLATE NUMBER</b></td>
                             <td style="text-align: center;"><b>ROUTES</b></td>
-                            <td style="text-align: center;"><b>ACTION</b></td>
                         </tr>
                         <?php
                         $rows = view_data();
 
                         foreach ($rows as $row) {
                             echo "<tr>";
-                            echo "<td>" . $row['BusName'] . "</td>";
-                            echo "<td>" . $row['NumberPlate'] . "</td>";
-
-                            echo "<td>";
+                            echo "<td class='text-center'>" . $row['BusName'] . "</td>";
+                            echo "<td class='text-center'>" . $row['NumberPlate'] . "</td>";
+                            echo "<td class='text-center'>";
                             echo "<table class='table'>";
-                            echo "<tr><th>Route Name</th><th>Departure Time</th></tr>";
+                            echo "<tr><th>Route Name</th><th>Departure Time</th><th>Number of Seats</th><th>Action</th></tr>";
+
                             $routes = view_routes($row['BusID']);
-
                             foreach ($routes as $route) {
-                                echo "<tr><td>{$route['RouteName']}</td><td>{$route['DepartureTime']}</td></tr>";
+                                echo "<tr>";
+                                echo "<td class='text-center'>{$route['RouteName']}</td>";
+                                echo "<td class='text-center'>{$route['DepartureTime']}</td>";
+                                echo "<td class='text-center'>{$route['NumSeatsAvailable']}</td>";
+                                echo "<td class='text-center'>";
+                                echo "<form method='post'>";
+                                echo "<input type='hidden' name='BusID' value='{$row['BusID']}'>";
+                                echo "<input type='hidden' name='RouteID' value='{$route['RouteID']}'>";
+                                echo "<button type='submit' class='btn btn-success' name='bookNow'>Book Now</button>";
+                                echo "</form>";
+                                echo "</td>";
+                                echo "</tr>";
                             }
-
                             echo "</table>";
                             echo "</td>";
-
-                            // Action Column with "Book Now" button
-                            echo "<td>";
-                            echo "<form method='post' action='book-now.php'>"; // Change 'book-now.php' to your booking page
-                            echo "<input type='hidden' name='BusID' value='{$row['BusID']}'>";
-                            echo "<button type='submit' class='btn btn-success'>Book Now</button>";
-                            echo "</form>";
-                            echo "</td>";
-
-                            echo "</tr>";
                         }
                         ?>
+                </div>
             </main>
+
         </div>
     </div>
 
