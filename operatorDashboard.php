@@ -224,7 +224,6 @@ include 'operator-crud.php';
                         </div>
                         <!-- End Delete Menu Modal -->
 
-
                         <!-- Add Route Modal -->
                         <div class="modal fade" id="addRouteModal" tabindex="-1" role="dialog" aria-labelledby="addRouteModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -256,6 +255,7 @@ include 'operator-crud.php';
                                 </div>
                             </div>
                         </div>
+                        <!-- End Route Modal -->
 
                         <!-- Edit Route Modal -->
                         <div class="modal fade" id="editRouteModal" tabindex="-1" role="dialog" aria-labelledby="editRouteModalLabel" aria-hidden="true">
@@ -269,18 +269,18 @@ include 'operator-crud.php';
                                     </div>
                                     <div class="modal-body">
                                         <form method="post">
-                                            <input type="hidden" name="editRoute" value="<?php echo $route['RouteID']; ?>">
+                                            <input type="hidden" name="editRoute" id="edit-route-id">
                                             <div class="form-group">
-                                                <label for="RouteName">Route Name:</label>
-                                                <input class="form-control" type="text" name="RouteName" value="<?php echo $route['RouteName']; ?>" required />
+                                                <label for="edit-routeName">Route Name:</label>
+                                                <input class="form-control" type="text" name="RouteName" id="edit-routeName" required />
                                             </div>
                                             <div class="form-group">
-                                                <label for="DepartureTime">Departure Time:</label>
-                                                <input class="form-control" type="datetime-local" name="DepartureTime" value="<?php echo date('Y-m-d\TH:i:s', strtotime($route['DepartureTime'])); ?>" required />
+                                                <label for="edit-departureTime">Departure Time:</label>
+                                                <input class="form-control" type="datetime-local" name="DepartureTime" id="edit-departureTime" required />
                                             </div>
                                             <div class="form-group">
-                                                <label for="NumSeatsAvailable">Number of seats:</label>
-                                                <input class="form-control" type="number" name="NumSeatsAvailable" value="<?php echo $route['NumSeatsAvailable']; ?>" required />
+                                                <label for="edit-numSeatsAvailable">Number of seats:</label>
+                                                <input class="form-control" type="number" name="NumSeatsAvailable" id="edit-numSeatsAvailable" required />
                                             </div>
                                             <button class="btn btn-primary" type="submit" style="margin-left: 190px; margin-top: 15px;">Save</button>
                                         </form>
@@ -288,6 +288,7 @@ include 'operator-crud.php';
                                 </div>
                             </div>
                         </div>
+                        <!-- End Edit Route Modal -->
 
                         <!-- Delete Route Modal -->
                         <div class="modal fade" id="deleteRouteModal" tabindex="-1" role="dialog" aria-labelledby="deleteRouteModalLabel" aria-hidden="true">
@@ -305,16 +306,19 @@ include 'operator-crud.php';
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                         <form method="post" style="display: inline;">
-                                            <input type="hidden" name="deleteRoute" value="<?php echo $route['RouteID']; ?>">
+                                            <input type="hidden" name="deleteRoute" id="delete-route-id">
                                             <button type="submit" class="btn btn-danger">Delete</button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- End Delete Route Modal -->
+
             </main>
 
             <script>
+                // Edit Bus Modal
                 $('#editBusModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     var BusID = button.data('bus-id');
@@ -326,6 +330,7 @@ include 'operator-crud.php';
                     $('#edit-numberPlate').val(NumberPlate);
                 });
 
+                // Delete Bus Modal
                 $('#deleteBusModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     var BusID = button.data('bus-id');
@@ -333,12 +338,23 @@ include 'operator-crud.php';
                     $('#delete-bus-id').val(BusID);
                 });
 
+                // Add Route Modal
                 $('#addRouteModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     var BusID = button.data('bus-id');
                     $('#route-bus-id').val(BusID);
                 });
 
+                // Delete Route Modal
+                $('#deleteRouteModal').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget);
+                    var RouteId = button.data('route-id');
+
+                    // Set the route ID in the delete modal form
+                    $('#delete-route-id').val(RouteId);
+                });
+
+                // Edit Route Modal
                 $('#editRouteModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget);
                     var RouteId = button.data('route-id');
@@ -346,18 +362,12 @@ include 'operator-crud.php';
                     var DepartureTime = button.data('departure-time');
                     var NumSeatsAvailable = button.data('num-seats-available');
 
-                    //console.log('RouteId:', RouteId);
-                    //console.log('RouteName:', RouteName);
-                    //console.log('DepartureTime:', DepartureTime);
-                    //console.log('NumSeatsAvailable:', NumSeatsAvailable);
-
                     // Populate the modal fields with the route data
                     $('#edit-route-id').val(RouteId);
                     $('#edit-routeName').val(RouteName);
                     $('#edit-departureTime').val(DepartureTime);
                     $('#edit-numSeatsAvailable').val(NumSeatsAvailable);
                 });
-
 
 
                 // Delete Route Modal
