@@ -92,13 +92,14 @@ include 'customer-crud.php';
                             echo "<td class='text-center'>" . $row['NumberPlate'] . "</td>";
                             echo "<td class='text-center'>";
                             echo "<table class='table'>";
-                            echo "<tr><th>Route Name</th><th>Departure Time</th><th>Number of Seats</th><th>Action</th></tr>";
+                            echo "<tr><th>Route Name</th><th>Departure Time</th><th>Arrival Time</th><th>Number of Seats</th><th>Action</th></tr>";
 
                             $routes = view_routes($row['BusID']);
                             foreach ($routes as $route) {
                                 echo "<tr>";
                                 echo "<td class='text-center'>{$route['RouteName']}</td>";
                                 echo "<td class='text-center'>{$route['DepartureTime']}</td>";
+                                echo "<td class='text-center'>{$route['ArrivalTime']}</td>";
                                 echo "<td class='text-center'>{$route['NumSeatsAvailable']}</td>";
                                 echo "<td class='text-center'>";
                                 echo "<form method='post'>";

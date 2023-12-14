@@ -128,12 +128,13 @@ include 'operator-crud.php';
                             echo "<td class='text-center'>" . $row['NumberPlate'] . "</td>";
                             echo "<td class='text-center'>";
                             echo "<table class='table'>";
-                            echo "<tr><th>Route Name</th><th>Departure Time</th><th>Number of Seats</th><th>Action</th></tr>";
+                            echo "<tr><th>Route Name</th><th>Departure Time</th><th>Arrival Time</th><th>Number of Seats</th><th>Action</th></tr>";
                             $routes = view_routes($row['BusID']);
                             foreach ($routes as $route) {
                                 echo "<tr>";
                                 echo "<td class='text-center'>{$route['RouteName']}</td>";
                                 echo "<td class='text-center'>{$route['DepartureTime']}</td>";
+                                echo "<td class='text-center'>{$route['ArrivalTime']}</td>";
                                 echo "<td class='text-center'>{$route['NumSeatsAvailable']}</td>";
                                 echo "<td class='text-center'>";
 
@@ -141,6 +142,7 @@ include 'operator-crud.php';
                                 data-route-id='{$route['RouteID']}' 
                                 data-route-name='{$route['RouteName']}' 
                                 data-departure-time='{$route['DepartureTime']}' 
+                                data-arrival-time='{$route['ArrivalTime']}' 
                                 data-num-seats-available='{$route['NumSeatsAvailable']}'>Edit</button>&nbsp;";
 
                                 echo "<button type='button' class='btn btn-danger' data-toggle='modal' data-target='#deleteRouteModal' 
@@ -246,6 +248,10 @@ include 'operator-crud.php';
                                                 <input class="form-control" type="datetime-local" name="DepartureTime" required />
                                             </div>
                                             <div class="form-group">
+                                                <label>Arrival Time:</label>
+                                                <input class="form-control" type="datetime-local" name="ArrivalTime" required />
+                                            </div>
+                                            <div class="form-group">
                                                 <label>Number of seats: </label>
                                                 <input class="form-control" type="number" name="NumSeatsAvailable" required />
                                             </div>
@@ -277,6 +283,10 @@ include 'operator-crud.php';
                                             <div class="form-group">
                                                 <label for="edit-departureTime">Departure Time:</label>
                                                 <input class="form-control" type="datetime-local" name="DepartureTime" id="edit-departureTime" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="edit-arrivalTime">Arrival Time:</label>
+                                                <input class="form-control" type="datetime-local" name="ArrivalTime" id="edit-arrivalTime" required />
                                             </div>
                                             <div class="form-group">
                                                 <label for="edit-numSeatsAvailable">Number of seats:</label>
@@ -360,12 +370,14 @@ include 'operator-crud.php';
                     var RouteId = button.data('route-id');
                     var RouteName = button.data('route-name');
                     var DepartureTime = button.data('departure-time');
+                    var ArrivalTime = button.data('arrival-time');
                     var NumSeatsAvailable = button.data('num-seats-available');
 
                     // Populate the modal fields with the route data
                     $('#edit-route-id').val(RouteId);
                     $('#edit-routeName').val(RouteName);
                     $('#edit-departureTime').val(DepartureTime);
+                    $('#edit-arrivalTime').val(ArrivalTime);
                     $('#edit-numSeatsAvailable').val(NumSeatsAvailable);
                 });
 

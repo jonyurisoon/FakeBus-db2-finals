@@ -30,6 +30,7 @@ CREATE TABLE Route (
     BusID INT,
     RouteName VARCHAR(255) NOT NULL,
     DepartureTime DATETIME NOT NULL,
+    ArrivalTime DATETIME NOT NULL,
     FOREIGN KEY (BusID) REFERENCES Bus(BusID)
 );
 

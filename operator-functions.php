@@ -67,7 +67,7 @@ function view_data_json()
 }
 */
 
-//Update
+// Update bus
 function update_data($BusName, $NumberPlate, $BusID)
 {
     $db = conn_db();
@@ -91,7 +91,7 @@ function update_data($BusName, $NumberPlate, $BusID)
     $db = null;
 }
 
-//Delete
+// Delete bus
 function delete_data($BusID)
 {
     $db = conn_db();
@@ -127,13 +127,35 @@ function search_data($BusID)
     return $row ?: [];
 }
 
-function add_route($BusID, $RouteName, $DepartureTime, $NumSeatsAvailable)
+function add_route($BusID, $RouteName, $DepartureTime, $ArrivalTime, $NumSeatsAvailable)
 {
+    // Validate that ArrivalTime is greater than DepartureTime
+    if (strtotime($ArrivalTime) <= strtotime($DepartureTime)) {
+        // Display an error message and reopen the modal with the form data
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'ArrivalTime must be greater than DepartureTime!',
+            }).then(() => {
+                // Reopen the modal with the form data
+                $('#addRouteModal').modal('show');
+                // Populate the form fields
+                $('#route-bus-id').val('$BusID');
+                $('input[name=RouteName]').val('$RouteName');
+                $('input[name=DepartureTime]').val('$DepartureTime');
+                $('input[name=ArrivalTime]').val('$ArrivalTime');
+                $('input[name=NumSeatsAvailable]').val('$NumSeatsAvailable');
+            });
+        </script>";
+        return; // Exit the function if the condition is not met
+    }
+
     $db = conn_db();
-    $sql = "INSERT INTO Route (BusID, RouteName, DepartureTime) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO Route (BusID, RouteName, ArrivalTime, DepartureTime) VALUES (?, ?, ?, ?)";
     $st = $db->prepare($sql);
 
-    if ($st->execute([$BusID, $RouteName, $DepartureTime])) {
+    if ($st->execute([$BusID, $RouteName, $ArrivalTime, $DepartureTime])) {
         // Get the last inserted route ID
         $routeID = $db->lastInsertId();
 
@@ -158,10 +180,11 @@ function add_route($BusID, $RouteName, $DepartureTime, $NumSeatsAvailable)
     $db = null;
 }
 
+
 function view_routes($BusID)
 {
     $db = conn_db();
-    $sql = "SELECT r.RouteID, r.RouteName, r.DepartureTime, s.NumSeatsAvailable 
+    $sql = "SELECT r.RouteID, r.RouteName, r.DepartureTime, r.ArrivalTime, s.NumSeatsAvailable 
             FROM Route r
             LEFT JOIN Seat s ON r.RouteID = s.RouteID
             WHERE r.BusID = ?
@@ -174,15 +197,15 @@ function view_routes($BusID)
 }
 
 
-function update_route($RouteName, $DepartureTime, $NumSeatsAvailable, $RouteID)
+function update_route($RouteName, $DepartureTime, $ArrivalTime, $NumSeatsAvailable, $RouteID)
 {
     $db = conn_db();
 
     // Update route details
-    $sqlUpdateRoute = "UPDATE Route SET RouteName=?, DepartureTime=? WHERE RouteID=?";
+    $sqlUpdateRoute = "UPDATE Route SET RouteName=?, ArrivalTime=?, DepartureTime=? WHERE RouteID=?";
     $stUpdateRoute = $db->prepare($sqlUpdateRoute);
 
-    if ($stUpdateRoute->execute([$RouteName, $DepartureTime, $RouteID])) {
+    if ($stUpdateRoute->execute([$RouteName, $DepartureTime, $ArrivalTime, $RouteID])) {
         // Success - Update NumSeatsAvailable in associated seats
         update_seats($RouteID, $NumSeatsAvailable);
 

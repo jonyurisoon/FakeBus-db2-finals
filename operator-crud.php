@@ -26,9 +26,10 @@ if (isset($_POST['addRoute'])) {
     $BusID = isset($_POST['BusID']) ? trim($_POST['BusID']) : '';
     $RouteName = isset($_POST['RouteName']) ? trim($_POST['RouteName']) : '';
     $DepartureTime = isset($_POST['DepartureTime']) ? trim($_POST['DepartureTime']) : '';
+    $ArrivalTime = isset($_POST['ArrivalTime']) ? trim($_POST['ArrivalTime']) : '';
     $NumSeatsAvailable = isset($_POST['NumSeatsAvailable']) ? trim($_POST['NumSeatsAvailable']) : 0;
 
-    add_route($BusID, $RouteName, $DepartureTime, $NumSeatsAvailable);
+    add_route($BusID, $RouteName, $DepartureTime, $ArrivalTime, $NumSeatsAvailable);
 }
 
 // Edit Route
@@ -36,9 +37,10 @@ if (isset($_POST['editRoute'])) {
     $RouteID = trim($_POST['editRoute']);
     $RouteName = trim($_POST['RouteName']);
     $DepartureTime = trim($_POST['DepartureTime']);
+    $ArrivalTime = trim($_POST['ArrivalTime']);
     $NumSeatsAvailable = trim($_POST['NumSeatsAvailable']);
 
-    update_route($RouteName, $DepartureTime, $NumSeatsAvailable, $RouteID);
+    update_route($RouteName, $DepartureTime, $ArrivalTime, $NumSeatsAvailable, $RouteID);
 }
 
 
