@@ -6,43 +6,27 @@
 
 <?php
 
-// Create Ticket
-function create_ticket($RouteID, $CustomerID)
+function conn_db()
 {
-    $db = conn_db();
-    $sql = "INSERT INTO Ticket (RouteID, CustomerID) VALUES (?, ?)";
-    $st = $db->prepare($sql);
-
-    if ($st->execute([$RouteID, $CustomerID])) {
-        // Success - Display SweetAlert
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Ticket booked!',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = 'customerDashboard.php'; // Redirect to the customer dashboard
-                }
-            });
-        </script>";
-
-        // Decrease available seats
-        decrease_available_seats($RouteID);
+    try {
+        //if not working, change '3306' to your mysql port
+        return new PDO('mysql:host=localhost:3306;dbname=BUS_DB2', 'root', '');
+    } catch (PDOException $ex) {
+        echo "Connection Error: ", $ex->getMessage();
     }
-    $db = null;
 }
 
-// Function to decrease available seats
-function decrease_available_seats($RouteID)
+// Retrieve 
+function view_data()
 {
     $db = conn_db();
-    $sql = "UPDATE Seat SET NumSeatsAvailable = NumSeatsAvailable - 1 WHERE RouteID = ?";
+    $sql = "SELECT * FROM Bus ORDER BY BusID ASC";
     $st = $db->prepare($sql);
-    $st->execute([$RouteID]);
+    $st->execute();
+    $rows = $st->fetchAll(PDO::FETCH_ASSOC);
     $db = null;
+    return $rows;
 }
-
 
 
 ?>

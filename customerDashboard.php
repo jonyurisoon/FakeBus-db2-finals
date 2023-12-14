@@ -1,5 +1,5 @@
 <?php
-include 'operator-crud.php';
+include 'customer-crud.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
