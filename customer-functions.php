@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-</html>
-
 <?php
 
 function conn_db()
@@ -28,5 +22,52 @@ function view_data()
     return $rows;
 }
 
+function view_routes($BusID)
+{
+    $db = conn_db();
+    $sql = "SELECT r.RouteID, r.RouteName, r.DepartureTime, r.ArrivalTime, s.NumSeatsAvailable 
+            FROM Route r
+            LEFT JOIN Seat s ON r.RouteID = s.RouteID
+            WHERE r.BusID = ?
+            ORDER BY r.RouteID ASC";
+    $st = $db->prepare($sql);
+    $st->execute([$BusID]);
+    $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+    $db = null;
+    return $rows;
+}
 
-?>
+function bookNow($routeID, $customerID)
+{
+    $db = conn_db();
+    $sql = "INSERT INTO Ticket (RouteID, CustomerID) VALUES (:routeID, :customerID)";
+    $st = $db->prepare($sql);
+    $st->bindParam(':routeID', $routeID, PDO::PARAM_INT);
+    $st->bindParam(':customerID', $customerID, PDO::PARAM_INT);
+    $st->execute();
+
+    $ticketID = $db->lastInsertId();
+
+    $db = null;
+
+    return $ticketID;
+}
+
+function getTicketData($ticketID)
+{
+    $db = conn_db();
+
+    $sql = "SELECT t.TicketID, t.RouteID, t.CustomerID, r.RouteName, r.DepartureTime, r.ArrivalTime, c.CustomerFName, c.CustomerLName
+            FROM Ticket t
+            INNER JOIN Route r ON t.RouteID = r.RouteID
+            INNER JOIN Customer c ON t.CustomerID = c.CustomerID
+            WHERE t.TicketID = ?";
+
+    $st = $db->prepare($sql);
+    $st->execute([$ticketID]);
+    $ticketData = $st->fetch(PDO::FETCH_ASSOC);
+
+    $db = null;
+
+    return $ticketData;
+}

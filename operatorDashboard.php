@@ -51,6 +51,11 @@ include 'operator-crud.php';
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">Operator Dashboard</a>
+        <form class="form-inline my-2 my-lg-0 ml-auto">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="searchData()">Search</button>
+        </form>
+
     </nav>
 
     <div class="container-fluid">
@@ -111,7 +116,7 @@ include 'operator-crud.php';
                 </div>
                 <!-- End of Add Bus Modal -->
                 <div>
-                    <table class="table table-bordered mx-auto p-2" style="width: 100%; margin-top: 10px;">
+                    <table id="dataTable" class="table table-bordered mx-auto p-2" style="width: 100%; margin-top: 10px;">
                         <tr>
                             <td style="text-align: center;"><b>ID</b></td>
                             <td style="text-align: center;"><b>BUS NAME</b></td>
@@ -421,6 +426,26 @@ include 'operator-crud.php';
                     });
                 }
             });
+        }
+
+        function searchData() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("dataTable"); // Assuming your table has the id "dataTable"
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1]; // Change the index to the column you want to search
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
         }
     </script>
 </body>

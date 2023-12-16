@@ -1,5 +1,5 @@
 <?php
-include 'customer-crud.php';
+include 'operator-crud.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,6 +48,10 @@ include 'customer-crud.php';
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">Customer Dashboard</a>
+        <form class="form-inline my-2 my-lg-0 ml-auto">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="searchData()">Search</button>
+        </form>
     </nav>
 
     <div class="container-fluid">
@@ -77,7 +81,7 @@ include 'customer-crud.php';
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 main-content">
                 <div>
-                    <table class="table table-bordered mx-auto p-2" style="width: 100%; margin-top: 10px;">
+                    <table id="customerTable" class="table table-bordered mx-auto p-2" style="width: 100%; margin-top: 10px;">
                         <tr>
                             <td style="text-align: center;"><b>BUS NAME</b></td>
                             <td style="text-align: center;"><b>BUS PLATE NUMBER</b></td>
@@ -91,7 +95,7 @@ include 'customer-crud.php';
                             echo "<td class='text-center'>" . $row['BusName'] . "</td>";
                             echo "<td class='text-center'>" . $row['NumberPlate'] . "</td>";
                             echo "<td class='text-center'>";
-                            echo "<table class='table'>";
+                            echo "<table id='customerTable' class='table'>";
                             echo "<tr><th>Route</th><th>Departure Time</th><th>Arrival Time</th><th>Number of Seats</th><th>Action</th></tr>";
 
                             $routes = view_routes($row['BusID']);
@@ -105,7 +109,11 @@ include 'customer-crud.php';
                                 echo "<form method='post'>";
                                 echo "<input type='hidden' name='BusID' value='{$row['BusID']}'>";
                                 echo "<input type='hidden' name='RouteID' value='{$route['RouteID']}'>";
+                                echo "<form method='post' action='bookTicket.php'>";  // Specify the action to 'bookTicket.php'
+                                echo "<input type='hidden' name='BusID' value='{$row['BusID']}'>";
+                                echo "<input type='hidden' name='RouteID' value='{$route['RouteID']}'>";
                                 echo "<button type='submit' class='btn btn-success' name='bookNow'>Book Now</button>";
+                                echo "</form>";
                                 echo "</form>";
                                 echo "</td>";
                                 echo "</tr>";
@@ -121,28 +129,56 @@ include 'customer-crud.php';
     </div>
 
     <script>
-        function confirmLogout() {
-            Swal.fire({
-                title: 'Logout',
-                text: 'Are you sure you want to logout?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, logout!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Display a confirmation alert after successful logout
-                    Swal.fire({
-                        title: 'Logged Out',
-                        text: 'You have successfully logged out.',
-                        icon: 'success'
-                    }).then(() => {
-                        // Redirect to the login page after logout confirmation
-                        window.location.href = "login.php";
-                    });
+        $(document).ready(function() {
+            function confirmLogout() {
+                Swal.fire({
+                    title: 'Logout',
+                    text: 'Are you sure you want to logout?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, logout!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Display a confirmation alert after successful logout
+                        Swal.fire({
+                            title: 'Logged Out',
+                            text: 'You have successfully logged out.',
+                            icon: 'success'
+                        }).then(() => {
+                            // Redirect to the login page after logout confirmation
+                            window.location.href = "login.php";
+                        });
+                    }
+                });
+
+            }
+
+        });
+    </script>
+
+    <script>
+        function searchData() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("customerTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
                 }
-            });
+            }
         }
     </script>
 </body>
