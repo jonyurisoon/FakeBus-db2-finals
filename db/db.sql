@@ -37,8 +37,8 @@ CREATE TABLE Route (
 CREATE TABLE Ticket (
     TicketID INT AUTO_INCREMENT PRIMARY KEY,
     RouteID INT,
-    CustomerID INT,
-    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    /*CustomerID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),*/
     FOREIGN KEY (RouteID) REFERENCES Route(RouteID)
 );
 

@@ -106,14 +106,10 @@ include 'operator-crud.php';
                                 echo "<td class='text-center'>{$route['ArrivalTime']}</td>";
                                 echo "<td class='text-center'>{$route['NumSeatsAvailable']}</td>";
                                 echo "<td class='text-center'>";
-                                echo "<form method='post'>";
-                                echo "<input type='hidden' name='BusID' value='{$row['BusID']}'>";
-                                echo "<input type='hidden' name='RouteID' value='{$route['RouteID']}'>";
-                                echo "<form method='post' action='bookTicket.php'>";  // Specify the action to 'bookTicket.php'
+                                echo "<form method='post' action='customerProfile.php'>";
                                 echo "<input type='hidden' name='BusID' value='{$row['BusID']}'>";
                                 echo "<input type='hidden' name='RouteID' value='{$route['RouteID']}'>";
                                 echo "<button type='submit' class='btn btn-success' name='bookNow'>Book Now</button>";
-                                echo "</form>";
                                 echo "</form>";
                                 echo "</td>";
                                 echo "</tr>";
