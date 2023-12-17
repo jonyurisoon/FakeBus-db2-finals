@@ -48,3 +48,19 @@ CREATE TABLE Seat (
     NumSeatsAvailable INT NOT NULL,
     FOREIGN KEY (RouteID) REFERENCES Route(RouteID)
 );
+
+
+-- STORED PROCEDURES --
+
+--INSERT BUS SP
+DELIMITER //
+CREATE PROCEDURE InsertBus(
+    IN p_BusName VARCHAR(30),
+    IN p_NumberPlate VARCHAR(30)
+)
+BEGIN
+    INSERT INTO Bus (BusName, NumberPlate) VALUES (p_BusName, p_NumberPlate);
+END //
+DELIMITER ;
+
+
