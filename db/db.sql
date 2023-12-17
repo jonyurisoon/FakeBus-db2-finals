@@ -49,7 +49,17 @@ CREATE TABLE Seat (
     FOREIGN KEY (RouteID) REFERENCES Route(RouteID)
 );
 
+/*
+CREATE TABLE Payment (
 
+    PaymentID INT AUTO_INCREMENT PRIMARY KEY,
+    Amount DECIMAL(10, 2) NOT NULL,
+    PaymentDate DATETIME NOT NULL,
+    CustomerID INT
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+
+);
+*/
 -- STORED PROCEDURES --
 
 --INSERT BUS SP
